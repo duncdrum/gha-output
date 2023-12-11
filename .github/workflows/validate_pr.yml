@@ -9,8 +9,6 @@ defaults:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # outputs:
-    #   files: ${{ steps.changed.outputs.files }}
     steps:     
       # checkout code
       - name: Checkout
@@ -25,9 +23,8 @@ jobs:
       #     repository: BetaMasaheft/Schema
       #     path: schema
       - name: Install Test Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libxml2-utils
+        run: sudo apt-get install -y libxml2-utils
+        # sudo apt-get update
       # Compare locally changed files to PR's base
       - name: dummy color output
         id: dummy
@@ -39,9 +36,9 @@ jobs:
       - name: Check for changed source files
         id: changed
         run: |
-          echo "FILES=$(git diff --name-only --diff-filter=ACMRT \
+          echo "files=git diff --name-only --diff-filter=ACMRT \
             ${{ github.event.pull_request.base.sha }} \
-            ${{ github.sha }} -- '*.xml')"  | xargs
+            ${{ github.sha }} -- '*.xml' | xargs"
             >> "$GITHUB_OUTPUT"
       # -- './**/*.xml,*/transkribus*.xml,*/facsimile*.xml' | xargs
       - name: Log Output
