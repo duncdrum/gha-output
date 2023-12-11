@@ -9,18 +9,18 @@ defaults:
 jobs:
   test:
     runs-on: ubuntu-latest
-    outputs:
-      files: ${{ steps.changed.outputs.files }}
+    # outputs:
+    #   files: ${{ steps.changed.outputs.files }}
     steps:     
       # checkout code
       - name: Checkout
         uses: actions/checkout@v4
         with:
           path: project
-          fetch-depth: 0
+          fetch-depth: 2
       # checkout schema as xmllint can't https 
       # - name: Checkout schema repo
-      #   uses: actions/checkout@v3
+      #   uses: actions/checkout@v4
       #   with:
       #     repository: BetaMasaheft/Schema
       #     path: schema
@@ -30,16 +30,16 @@ jobs:
           sudo apt-get install -y libxml2-utils
       # Compare locally changed files to PR's base
       - name: Check for changed source files
-        id: files
+        id: changed
         run: |
           echo "::set-output name=files::$( \
             git diff --name-only --diff-filter=ACMRT \
             ${{ github.event.pull_request.base.sha }} \
             ${{ github.sha }} -- './**/*.xml,!./**/transkribus*.xml,!./**/facsimile*.xml' | xargs)"
       - name: Log Output
-        env:
-          FILES: ${{ steps.changed.outputs.files }}
-        run: echo ${FILES}
+        # env:
+        #   FILES: ${{ steps.changed.outputs.files }}
+        run: echo ${{ steps.changed.outputs.files }}
       # Validate changed files against latest schema
       # - name: Validate changed source files
       #   if: ${{ steps.changed.outputs.files != '' }}
