@@ -30,7 +30,7 @@ jobs:
           sudo apt-get install -y libxml2-utils
       # Compare locally changed files to PR's base
       - name: Check for changed source files
-        id: changed
+        id: files
         run: |
           echo "::set-output name=files::$( \
             git diff --name-only --diff-filter=ACMRT \
@@ -39,7 +39,7 @@ jobs:
       - name: Log Output
         env:
           FILES: ${{ steps.changed.outputs.files }}
-        run: echo $FILES
+        run: echo ${FILES}
       # Validate changed files against latest schema
       # - name: Validate changed source files
       #   if: ${{ steps.changed.outputs.files != '' }}
