@@ -29,6 +29,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libxml2-utils
       # Compare locally changed files to PR's base
+      - name: dummy color output
+        id: dummy
+        run: echo "color=green" >> "$GITHUB_OUTPUT" 
+      - name: Get color
+        env:
+          COLOR: ${{ steps.dummy.outputs.COLOR }}
+        run: echo "The selected color is $COLOR"
       - name: Check for changed source files
         id: changed
         run: |
