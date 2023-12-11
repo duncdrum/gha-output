@@ -36,9 +36,9 @@ jobs:
       - name: Check for changed source files
         id: changed
         run: |
-          echo "files=git diff --name-only --diff-filter=ACMRT \
+          echo "files=$(git diff --name-only --diff-filter=ACMRT \
             ${{ github.event.pull_request.base.sha }} \
-            ${{ github.sha }} -- '*.xml' | xargs"
+            ${{ github.sha }} -- '*.xml' | xargs)"
             >> "$GITHUB_OUTPUT"
       # -- './**/*.xml,*/transkribus*.xml,*/facsimile*.xml' | xargs
       - name: Log Output
