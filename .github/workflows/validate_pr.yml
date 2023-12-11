@@ -28,7 +28,7 @@ jobs:
       # Compare locally changed files to PR's base
       - name: dummy color output
         id: dummy
-        run: echo "color=green" >> "$GITHUB_OUTPUT" 
+        run: echo "color=green red" >> "$GITHUB_OUTPUT" 
       - name: Get color
         env:
           COLOR: ${{ steps.dummy.outputs.COLOR }}
