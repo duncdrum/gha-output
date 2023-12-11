@@ -32,10 +32,10 @@ jobs:
       - name: Check for changed source files
         id: changed
         run: |
-          echo "::set-output name=files::$( \
+          echo "name=files::$( \
             git diff --name-only --diff-filter=ACMRT \
             ${{ github.event.pull_request.base.sha }} \
-            ${{ github.sha }} -- './**/*.xml,!./**/transkribus*.xml,!./**/facsimile*.xml' | xargs)"
+            ${{ github.sha }} -- './**/*.xml,!./**/transkribus*.xml,!./**/facsimile*.xml' | xargs)" >> $GITHUB_OUTPUT
       - name: Log Output
         # env:
         #   FILES: ${{ steps.changed.outputs.files }}
