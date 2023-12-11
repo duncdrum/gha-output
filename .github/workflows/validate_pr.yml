@@ -35,7 +35,7 @@ jobs:
           echo "name=files::$( \
             git diff --name-only --diff-filter=ACMRT \
             ${{ github.event.pull_request.base.sha }} \
-            ${{ github.sha }} -- './**/*.xml,!./**/transkribus*.xml,!./**/facsimile*.xml')" >> $GITHUB_OUTPUT
+            ${{ github.sha }} -- './**/*.xml,!./**/transkribus*.xml,!./**/facsimile*.xml' | xargs )" >> "$GITHUB_OUTPUT"
       - name: Log Output
         # env:
         #   FILES: ${{ steps.changed.outputs.files }}
