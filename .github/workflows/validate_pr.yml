@@ -26,13 +26,6 @@ jobs:
         run: sudo apt-get install -y libxml2-utils
         # sudo apt-get update
       # Compare locally changed files to PR's base
-      - name: dummy color output
-        id: dummy
-        run: echo "color=green red" >> "$GITHUB_OUTPUT" 
-      - name: Get color
-        env:
-          COLOR: ${{ steps.dummy.outputs.COLOR }}
-        run: echo "The selected color is $COLOR"
       - name: Check for changed source files
         id: changed
         run: |
@@ -42,17 +35,17 @@ jobs:
             ${{ github.sha }} \
             -- '*.xml' '**/*.xml' ':!c*.xml' ':!*/transkribus*.xml' ':!*/facsimile*.xml' | xargs)"
           } >> "$GITHUB_OUTPUT"
-          
-      # -- './**/*.xml,*/transkribus*.xml,*/facsimile*.xml' | xargs
-      # -- '**/*.xml' '*.xml' ':!*/transkribus*.xml' ':!*/facsimile*.xml' | xargs
-      - name: Log Output
+      # If no xml files were modified ...
+      - name: No source files changed
+        if: ${{ steps.changed.outputs.files == '' }}
+        run: |
+          echo "All good"
+      # ... otherwise
+      - name: List modified documents
         env:
           FILES: ${{ steps.changed.outputs.FILES }}
-        run: 
-          | 
-          echo ${{ steps.changed.outputs.FILES }}
-          echo $FILES
-          echo ${FILES}
+        if: ${{ steps.changed.outputs.FILES != '' }}  
+        run: |
           echo "modified: $FILES"
       # Validate changed files against latest schema
       - name: Validate changed source files
@@ -66,11 +59,6 @@ jobs:
             $FILES \
             2>&1 | \
             { grep -vE 'RNG|validates' || :; }
-      # If no xml files were modified
-      - name: No source files changed
-        if: ${{ steps.changed.outputs.files == '' }}
-        run: |
-          echo "All good"
       # ensure branch conaints only well-formed xml files 
       - name: Ensure all XML files are well formed
         run: |
